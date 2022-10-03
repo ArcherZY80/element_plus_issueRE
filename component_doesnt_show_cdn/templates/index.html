@@ -1,0 +1,131 @@
+<html>
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>index</title>
+      <!-- Import style -->
+        <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+      <!-- Import Vue 3 -->
+        <script src="//unpkg.com/vue@3"></script>
+      <!-- Import component library -->
+        <script src="//unpkg.com/element-plus"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <el-container align = "middle">
+
+                <el-header>
+                    Reproduction
+                </el-header>
+
+                <el-main>
+
+                    <!-- The navigation is working fine -->
+                    <el-menu
+                        :default-active="activeIndex"
+                        mode="horizontal"
+                        @select="handleSelect"
+                        background-color="#4682b4"
+                        text-color="#fff"
+                        active-text-color="#ffd04b"
+                    >
+                        <el-menu-item index="0"> <a href="http://localhost:5000/">Homepage</a> </el-menu-item>
+                    </el-menu>
+                    <p> This is index This is index This is index This is index This is index</p>
+
+
+                    <!-- input component can show on website ,but it cannot receive actual input (u cannot input anything with this component)-->
+                    <!-- expected: show on website & functionally correct -->
+                    <!-- actual: show on website but not functionally correct -->
+
+                    <div>
+                       <el-input v-model="input" placeholder="Please input image key:" />
+                      <script lang="ts" setup >
+                      import { ref } from 'vue'
+                      const input = ref('')
+                      </script>
+                    </div>
+
+                    <!-- component doesn't show on website, syntax error within the file, import feature error-->
+                    <!-- expected: show on website & functionally correct -->
+                    <!-- actual: doesn't show on website and not functionally correct -->
+
+                    <div>
+                        <template>
+                          <el-upload
+                            ref="upload"
+                            class="upload-demo"
+                            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :auto-upload="false"
+                          >
+                            <template #trigger>
+                              <el-button type="primary">select file</el-button>
+                            </template>
+                            <el-button class="ml-3" type="success" @click="submitUpload">
+                              upload to server
+                            </el-button>
+                            <template #tip>
+                              <div class="el-upload__tip text-red">
+                                limit 1 file, new file will cover the old file
+                              </div>
+                            </template>
+                          </el-upload>
+                        </template>
+
+                        <script setup lang="ts" type="module">
+                        import { ref } from 'vue'
+                        import { genFileId } from 'element-plus'
+                        import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
+
+                        const upload = ref<UploadInstance>()
+
+                        const handleExceed: UploadProps['onExceed'] = (files) => {
+                          upload.value!.clearFiles()
+                          const file = files[0] as UploadRawFile
+                          file.uid = genFileId()
+                          upload.value!.handleStart(file)
+                        }
+
+                        const submitUpload = () => {
+                          upload.value!.submit()
+                        }
+                        </script>
+                    </div>
+
+
+
+
+                </el-main>
+
+                <el-footer color = "black" >
+                    <p color = "white">Footer Footer Footer</p>
+                </el-footer>
+            </el-container>
+        </div>
+
+        <script>
+            const App = {
+                data() {
+                    return {
+                        message: "Hello Element Plus",
+                    };
+                },
+                methods:{
+                    printConfigure(){
+                        console.log("this is the configure")
+                    }
+
+                }
+            };
+            const app = Vue.createApp(App);
+            app.use(ElementPlus);
+            app.mount("#app");
+        </script>
+    </body>
+
+
+
+</html>
